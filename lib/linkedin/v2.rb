@@ -19,6 +19,7 @@ require_relative "v2/entities/post"
 
 # apis
 require_relative "v2/api"
+require_relative "v2/api/article"
 require_relative "v2/api/organization"
 require_relative "v2/api/people"
 require_relative "v2/api/post"
@@ -34,7 +35,7 @@ module Linkedin
     end
 
     def self.configure
-      yield self.config
+      yield config
     end
   end
 end

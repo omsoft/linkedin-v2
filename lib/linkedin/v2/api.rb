@@ -5,7 +5,7 @@ module Linkedin
 
       attr_accessor :access_token
 
-      def initialize(access_token=nil)
+      def initialize(access_token = nil)
         @access_token = access_token
       end
 
