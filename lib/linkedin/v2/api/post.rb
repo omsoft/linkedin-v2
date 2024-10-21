@@ -1,7 +1,13 @@
 module Linkedin
   module V2
     class API::Post < API
-      def create(organization_urn, body, attachment = {})
+      # Creates a Post with image or video assets.
+      #
+      # * organization_urn is URN of the author of the content (eg. urn:li:organization:5515715)
+      # * body is the commentary of the post being published
+      # * attachments is a collection of asset urns (eg. urn:li:video:C5F10AQGKQg_6y2a4sQ)
+      #
+      def create(organization_urn, body, attachments = [])
         schema = {
           "author": organization_urn,
           "commentary": body,
@@ -15,16 +21,19 @@ module Linkedin
           "isReshareDisabledByAuthor": false
         }
 
-        if attachment.present?
+        if attachments.size > 1
           schema["content"] = {
-            "media": {
-              "title": attachment["title"],
-              "id": attachment["id"]
+            "multiImage": {
+              "images": attachments.map { |id| { id: } }
             }
+          }
+        elsif attachments.size == 1
+          schema["content"] = {
+            "media": { "id": attachments[0] }
           }
         end
 
-        response = post("posts", schema.to_json)
+        post("posts", schema.to_json)
       end
     end
   end

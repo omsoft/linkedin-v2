@@ -37,12 +37,29 @@ module Linkedin
         response = connection.post(path, params, options)
 
         case response.status
-        when 200
-          parsed = JSON.parse(response.body)
-          Response.new(parsed)
-        when 201
-          # if body empty, return response headers where Linkedin usually sets x-restli-id
-          response.body.present? ? response.body : response.headers
+        when 200, 201
+          if response.body.present?
+            parsed = JSON.parse(response.body)
+            Response.new(parsed)
+          else
+            response
+          end
+        else
+          raise APIError.new(response.status, response.body)
+        end
+      end
+
+      def put(path, params={}, options={})
+        response = connection.put(path, params, options)
+
+        case response.status
+        when 200, 201
+          if response.body.present?
+            parsed = JSON.parse(response.body)
+            Response.new(parsed)
+          else
+            response
+          end
         else
           raise APIError.new(response.status, response.body)
         end
